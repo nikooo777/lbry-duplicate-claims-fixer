@@ -41,6 +41,11 @@ function doWork() {
             console.info(
               "Gotta abandon: " + JSON.stringify(videoInfo, null, 4)
             );
+            try {
+              await abandon(videoInfo.claimID);
+            } catch (e) {
+              console.error(e);
+            }
           }
         } catch (e) {
           console.error(e);
@@ -72,4 +77,26 @@ async function processChannel(c) {
   sleep.msleep(50);
   return Promise.resolve(videoInfo);
 }
+
+function abandon(claimid) {
+  return new Promise((resolve, reject) => {
+    let options = {
+      method: "POST",
+      url: "http://localhost:5279",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: { method: "claim_abandon", params: { claim_id: claimid } },
+      json: true
+    };
+
+    request(options, function(error, response, body) {
+      if (error) return reject(error);
+
+      console.log(body);
+      return resolve(body);
+    });
+  });
+}
+
 doWork();
