@@ -1,5 +1,5 @@
 {
-  "name": "ytsync-database-filler",
+  "name": "multi-claim-fixer",
   "version": "0.0.1",
   "dependencies": {
     "request": "^2.87.0",
