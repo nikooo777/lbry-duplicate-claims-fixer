@@ -29,7 +29,9 @@ function doWork() {
           allVideos.push(videoInfo);
           if (!publishedIDs.hasOwnProperty(videoInfo.videoID)) {
             publishedIDs[videoInfo.videoID] = videoInfo;
-          } else {
+          } else if (
+            publishedIDs[videoInfo.videoID].claimID !== videoInfo.claimID
+          ) {
             console.error(
               "A video was already published for ID: " +
                 videoInfo.videoID +
@@ -48,7 +50,10 @@ function doWork() {
   });
 }
 async function processChannel(c) {
-  if (c.category !== "claim" || !c.value.hasOwnProperty("stream"))
+  if (
+    (c.category !== "claim" && c.category !== "update") ||
+    !c.value.hasOwnProperty("stream")
+  )
     return Promise.reject(c.category);
   let claimMetadata = c.value.stream.metadata;
   let videoID = claimMetadata.thumbnail.substr(
